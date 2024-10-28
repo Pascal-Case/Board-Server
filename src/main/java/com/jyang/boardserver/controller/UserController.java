@@ -6,6 +6,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
+import com.jyang.boardserver.aop.LoginCheck;
+import com.jyang.boardserver.aop.LoginCheck.UserType;
 import com.jyang.boardserver.dto.UserDTO;
 import com.jyang.boardserver.dto.request.LoginRequest;
 import com.jyang.boardserver.dto.request.UserDeleteId;
@@ -88,16 +90,18 @@ public class UserController {
     }
 
     @PatchMapping("password")
-    public ResponseEntity<LoginResponse> updateUserPassword(@RequestBody UserUpdatePasswordRequest request,
+    @LoginCheck(type = UserType.USER)
+    public ResponseEntity<LoginResponse> updateUserPassword(String userId,
+                                                            @RequestBody UserUpdatePasswordRequest request,
                                                             HttpSession session) {
+        System.out.println(userId);
         ResponseEntity<LoginResponse> responseEntity;
 
-        String id = SessionUtil.getLoginMemberId(session);
         String beforePassword = request.getBeforePassword();
         String afterPassword = request.getAfterPassword();
 
         try {
-            userService.updatePassword(id, beforePassword, afterPassword);
+            userService.updatePassword(userId, beforePassword, afterPassword);
             responseEntity = new ResponseEntity<>(OK);
         } catch (IllegalArgumentException e) {
             log.error("updatePassword ERROR!", e);
