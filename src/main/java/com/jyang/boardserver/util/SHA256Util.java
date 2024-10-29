@@ -2,12 +2,12 @@ package com.jyang.boardserver.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 public class SHA256Util {
     public static final String ENCRYPTION_KEY = "SHA-256";
+
     public static String encryptSHA256(String str) {
         String SHA = null;
 

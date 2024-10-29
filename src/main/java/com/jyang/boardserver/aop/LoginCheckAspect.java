@@ -2,7 +2,7 @@ package com.jyang.boardserver.aop;
 
 import com.jyang.boardserver.util.SessionUtil;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @Aspect
 @Order(Ordered.LOWEST_PRECEDENCE)
-@Log4j2
+@Slf4j
 public class LoginCheckAspect {
     @Around("@annotation(com.jyang.boardserver.aop.LoginCheck) && @ annotation(loginCheck)")
     public Object adminLoginCheck(ProceedingJoinPoint proceedingJoinPoint, LoginCheck loginCheck) throws Throwable {

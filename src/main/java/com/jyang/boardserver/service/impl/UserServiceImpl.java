@@ -8,13 +8,13 @@ import com.jyang.boardserver.mapper.UserProfileMapper;
 import com.jyang.boardserver.service.UserService;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserProfileMapper userProfileMapper;
