@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyang.boardserver.mapper.PostMapper">
+    <insert id="register" parameterType="com.jyang.boardserver.dto.PostDTO">
+        INSERT INTO post(name, isAdmin, contents, createTime, updateTime, views, userId, categoryId)
+        VALUES (#{name}, #{isAdmin}, #{contents}, #{createTime}, #{updateTime}, #{views}, #{userId}, #{categoryId})
+    </insert>
+
+    <select id="getMyPosts" parameterType="com.jyang.boardserver.dto.PostDTO">
+        SELECT id,
+               name,
+               isAdmin,
+               contents,
+               createTime,
+               views,
+               categoryId,
+               userId,
+               updateTime
+        FROM post
+        WHERE userId = #{userId}
+    </select>
+    <update id="updatePosts" parameterType="com.jyang.boardserver.dto.PostDTO">
+        UPDATE post
+        SET contents   = #{contents},
+            name       = #{name},
+            views      = #{views},
+            categoryId = #{categoryId},
+            userId     = #{userId},
+            updateTime = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deletePosts" parameterType="com.jyang.boardserver.dto.PostDTO">
+        DELETE
+        FROM post
+        WHERE id = #{postId}
+    </delete>
+</mapper>

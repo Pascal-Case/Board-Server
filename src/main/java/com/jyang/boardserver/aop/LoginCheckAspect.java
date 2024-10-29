@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Component
 @Aspect
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order()
 @Slf4j
 public class LoginCheckAspect {
     @Around("@annotation(com.jyang.boardserver.aop.LoginCheck) && @ annotation(loginCheck)")

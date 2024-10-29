@@ -69,6 +69,9 @@ public class UserController {
             responseEntity = new ResponseEntity<>(loginResponse, OK);
         }
 
+        log.info("log in user : " + id);
+        log.info("log in status : " + userInfo.getStatus());
+
         return OK;
     }
 

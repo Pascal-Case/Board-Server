@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserInfo(String userId) {
-        System.out.println(userId);
         return userProfileMapper.getUserProfile(userId);
     }
 
