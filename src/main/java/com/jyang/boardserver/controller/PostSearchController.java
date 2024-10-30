@@ -1,12 +1,11 @@
 package com.jyang.boardserver.controller;
 
-import com.jyang.boardserver.dto.PostDTO;
 import com.jyang.boardserver.dto.request.PostSearchRequest;
 import com.jyang.boardserver.dto.response.PostSearchResponse;
 import com.jyang.boardserver.service.impl.PostSearchServiceImpl;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,11 @@ public class PostSearchController {
 
     @PostMapping
     public PostSearchResponse search(@RequestBody PostSearchRequest postSearchRequest) {
-        List<PostDTO> postDTOList = postSearchService.getPosts(postSearchRequest);
-        return new PostSearchResponse(postDTOList);
+        return new PostSearchResponse(postSearchService.getPosts(postSearchRequest));
+    }
+
+    @GetMapping
+    public PostSearchResponse searchByTagName(String tagName) {
+        return new PostSearchResponse(postSearchService.getPostByTag(tagName));
     }
 }

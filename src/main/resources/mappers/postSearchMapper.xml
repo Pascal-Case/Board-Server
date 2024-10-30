@@ -37,4 +37,20 @@
 
     </select>
 
+    <select id="getPostsByTag" resultType="com.jyang.boardserver.dto.request.PostSearchRequest">
+        SELECT p.id,
+               p.name,
+               p.isAdmin,
+               p.contents,
+               p.createTime,
+               p.views,
+               p.categoryId,
+               p.userId,
+               p.updateTime
+        FROM post p
+                 JOIN posttag pt ON p.id = pt.postId
+                 JOIN tag t ON pt.tagId = t.id
+        WHERE t.name = #{tagName}
+    </select>
+
 </mapper>

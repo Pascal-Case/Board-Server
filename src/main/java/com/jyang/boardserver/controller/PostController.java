@@ -5,7 +5,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.jyang.boardserver.aop.LoginCheck;
+import com.jyang.boardserver.dto.CommentDTO;
 import com.jyang.boardserver.dto.PostDTO;
+import com.jyang.boardserver.dto.TagDTO;
 import com.jyang.boardserver.dto.UserDTO;
 import com.jyang.boardserver.dto.request.PostDeleteRequest;
 import com.jyang.boardserver.dto.request.PostUpdateRequest;
@@ -57,7 +59,8 @@ public class PostController {
     @LoginCheck(type = USER)
     public ResponseEntity<CommonResponse<PostDTO>> updatePosts(String accountId,
                                                                @PathVariable(name = "postId") int postId,
-                                                               @RequestBody PostUpdateRequest postUpdateRequest) {
+                                                               @RequestBody PostUpdateRequest postUpdateRequest
+    ) {
         UserDTO memberInfo = userService.getUserInfo(accountId);
         PostDTO postDTO = PostDTO.builder()
                 .id(postId)
@@ -69,7 +72,6 @@ public class PostController {
                 .fileId(postUpdateRequest.getFileId())
                 .updateTime(new Date())
                 .build();
-        System.out.println(postDTO);
         postService.updatePosts(postDTO);
         CommonResponse<PostDTO> commonResponse = new CommonResponse<>(OK, "SUCCESS", "updatePosts", postDTO);
         return ResponseEntity.status(OK).body(commonResponse);
@@ -80,7 +82,8 @@ public class PostController {
     public ResponseEntity<CommonResponse<PostDeleteRequest>> deletePosts(String accountId,
                                                                          @PathVariable(name = "postId") int postId,
                                                                          @RequestBody
-                                                                         PostDeleteRequest postDeleteRequest) {
+                                                                         PostDeleteRequest postDeleteRequest
+    ) {
         UserDTO memberInfo = userService.getUserInfo(accountId);
         postService.deletePosts(memberInfo.getId(), postId);
         CommonResponse<PostDeleteRequest> commonResponse = new CommonResponse<>(OK, "SUCCESS", "deletePosts",
@@ -88,4 +91,87 @@ public class PostController {
         return ResponseEntity.status(OK).body(commonResponse);
     }
 
+    @PostMapping("comments")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> registerPostComment(String accountId,
+                                                                          @RequestBody CommentDTO commentDTO
+    ) {
+        postService.registerComment(commentDTO);
+        return ResponseEntity.status(CREATED).body(
+                new CommonResponse<>(CREATED, "SUCCESS", "registerComment", commentDTO)
+        );
+    }
+
+    @PatchMapping("comments/{commentId}")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> updatePostComment(String accountId,
+                                                                        @PathVariable(name = "commentId") int commentId,
+                                                                        @RequestBody CommentDTO commentDTO
+    ) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if (userInfo != null) {
+            postService.updateComment(commentDTO);
+        }
+        return ResponseEntity.ok(
+                new CommonResponse<>(OK, "SUCCESS", "updatePostComment", commentDTO)
+        );
+    }
+
+    @DeleteMapping("comments/{commentId}")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> deletePostComment(String accountId,
+                                                                        @PathVariable(name = "commentId") int commentId,
+                                                                        @RequestBody CommentDTO commentDTO
+    ) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if (userInfo != null) {
+            postService.deletePostComment(userInfo.getId(), commentId);
+        }
+        return ResponseEntity.ok(
+                new CommonResponse<>(OK, "SUCCESS", "deletePostComment", commentDTO)
+        );
+    }
+
+    @PostMapping("tags")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<TagDTO>> registerPostTag(String accountId,
+                                                                  @RequestBody TagDTO tagDTO) {
+
+        postService.registerTag(tagDTO);
+
+        return ResponseEntity.status(CREATED).body(
+                new CommonResponse<>(CREATED, "SUCCESS", "registerPostTag", tagDTO)
+        );
+    }
+
+    @PatchMapping("tags/{tagId}")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<TagDTO>> updatePostTag(String accountId,
+                                                                @PathVariable(name = "tagId") int tagId,
+                                                                @RequestBody TagDTO tagDTO
+    ) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if (userInfo != null) {
+            postService.updateTags(tagDTO);
+        }
+
+        return ResponseEntity.ok(
+                new CommonResponse<>(OK, "SUCCESS", "updatePostTag", tagDTO)
+        );
+    }
+
+    @DeleteMapping("tags/{tagId}")
+    @LoginCheck(type = USER)
+    public ResponseEntity<CommonResponse<TagDTO>> deletePostTag(String accountId,
+                                                                @PathVariable(name = "tagId") int tagId,
+                                                                @RequestBody TagDTO tagDTO
+    ) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if (userInfo != null) {
+            postService.deletePostTag(userInfo.getId(), tagId);
+        }
+        return ResponseEntity.ok(
+                new CommonResponse<>(OK, "SUCCESS", "deletePostTag", tagDTO)
+        );
+    }
 }
