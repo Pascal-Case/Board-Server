@@ -28,4 +28,14 @@ public class PostSearchServiceImpl implements PostSearchService {
         }
         return postDTOList;
     }
+
+    public List<PostDTO> getPostByTag(String tagName) {
+        List<PostDTO> postDTOList = null;
+        try {
+            postDTOList = postSearchMapper.getPostsByTag(tagName);
+        } catch (RuntimeException e) {
+            log.error("getPostByTag ERROR! {}", tagName);
+        }
+        return postDTOList;
+    }
 }

@@ -5,8 +5,8 @@
 
 <mapper namespace="com.jyang.boardserver.mapper.CategoryMapper">
     <insert id="register" parameterType="com.jyang.boardserver.dto.CategoryDTO">
-        INSERT INTO category(name)
-        VALUES (#{name})
+        INSERT INTO category(id, name)
+        VALUES (#{id}, #{name})
     </insert>
 
     <update id="updateCategory" parameterType="com.jyang.boardserver.dto.CategoryDTO">
