@@ -1,8 +1,12 @@
 package com.jyang.boardserver.service.impl;
 
+import com.jyang.boardserver.dto.CommentDTO;
 import com.jyang.boardserver.dto.PostDTO;
+import com.jyang.boardserver.dto.TagDTO;
 import com.jyang.boardserver.dto.UserDTO;
+import com.jyang.boardserver.mapper.CommentMapper;
 import com.jyang.boardserver.mapper.PostMapper;
+import com.jyang.boardserver.mapper.TagMapper;
 import com.jyang.boardserver.mapper.UserProfileMapper;
 import com.jyang.boardserver.service.PostService;
 import java.util.Date;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final UserProfileMapper userProfileMapper;
+    private final CommentMapper commentMapper;
+    private final TagMapper tagMapper;
 
     @Override
     public void register(String id, PostDTO postDTO) {
@@ -30,7 +36,16 @@ public class PostServiceImpl implements PostService {
         postDTO.setUserId(memberInfo.getId());
         postDTO.setCreateTime(new Date());
         postDTO.setUpdateTime(postDTO.getCreateTime());
+
         postMapper.register(postDTO);
+        Integer postId = postDTO.getId();
+        for (int i = 0; i < postDTO.getTagDTOList().size(); i++) {
+            TagDTO tagDTO = postDTO.getTagDTOList().get(i);
+            tagMapper.register(tagDTO);
+            Integer tagId = tagDTO.getId();
+            tagMapper.createPostTag(tagId, postId);
+        }
+
     }
 
     @Override
@@ -56,5 +71,59 @@ public class PostServiceImpl implements PostService {
         }
 
         postMapper.deletePosts(postId);
+    }
+
+    public void registerComment(CommentDTO commentDTO) {
+        if (commentDTO.getPostId() == 0) {
+            log.error("registerComment ERROR! {}", commentDTO);
+            throw new RuntimeException("registerComment " + commentDTO);
+        }
+        commentMapper.register(commentDTO);
+    }
+
+    @Override
+    public void updateComment(CommentDTO commentDTO) {
+        if (commentDTO == null) {
+            log.error("updateComment ERROR!");
+            throw new RuntimeException("updateComment");
+        }
+        commentMapper.updateComment(commentDTO);
+    }
+
+    @Override
+    public void deletePostComment(int userId, int commentId) {
+        if (userId == 0 || commentId == 0) {
+            log.error("deletePostComment ERROR! {}", commentId);
+            throw new RuntimeException("deletePostComment " + commentId);
+
+        }
+        commentMapper.deleteComment(commentId);
+    }
+
+    @Override
+    public void registerTag(TagDTO tagDTO) {
+        if (tagDTO == null) {
+            log.error("registerTag ERROR!");
+            throw new RuntimeException("registerTag");
+        }
+        tagMapper.register(tagDTO);
+    }
+
+    @Override
+    public void updateTags(TagDTO tagDTO) {
+        if (tagDTO == null) {
+            log.error("updateTags ERROR!");
+            throw new RuntimeException("updateTags");
+        }
+        tagMapper.updateTags(tagDTO);
+    }
+
+    @Override
+    public void deletePostTag(int userId, int tagId) {
+        if (userId == 0 || tagId == 0) {
+            log.error("deletePostTag ERROR! {}", tagId);
+            throw new RuntimeException("deletePostTag " + tagId);
+        }
+        tagMapper.deletePostTag(tagId);
     }
 }

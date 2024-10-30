@@ -5,8 +5,13 @@
 
 <mapper namespace="com.jyang.boardserver.mapper.PostMapper">
     <insert id="register" parameterType="com.jyang.boardserver.dto.PostDTO">
-        INSERT INTO post(name, isAdmin, contents, createTime, updateTime, views, userId, categoryId)
-        VALUES (#{name}, #{isAdmin}, #{contents}, #{createTime}, #{updateTime}, #{views}, #{userId}, #{categoryId})
+        INSERT INTO post(name, isAdmin, contents, createTime, updateTime, views, userId, categoryId, fileId)
+        VALUES ( #{name},#{isAdmin}, #{contents}, #{createTime}, #{updateTime},#{views}, #{userId}, #{categoryId},
+        #{fileId})
+
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <select id="getMyPosts" parameterType="com.jyang.boardserver.dto.PostDTO">
@@ -18,6 +23,7 @@
                views,
                categoryId,
                userId,
+               fileId,
                updateTime
         FROM post
         WHERE userId = #{userId}
@@ -29,6 +35,7 @@
             views      = #{views},
             categoryId = #{categoryId},
             userId     = #{userId},
+            fileId     = #{fileId},
             updateTime = #{updateTime}
         WHERE id = #{id}
     </update>

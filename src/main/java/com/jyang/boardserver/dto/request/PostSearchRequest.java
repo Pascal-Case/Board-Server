@@ -1,7 +1,6 @@
-package com.jyang.boardserver.dto;
+package com.jyang.boardserver.dto.request;
 
-import java.util.Date;
-import java.util.List;
+import com.jyang.boardserver.dto.CategoryDTO.SortStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,22 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Builder
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDTO {
+@Builder
+@ToString
+public class PostSearchRequest {
     private int id;
     private String name;
-    private int isAdmin;
     private String contents;
-    private Date createTime;
     private int views;
     private int categoryId;
     private int userId;
-    private int fileId;
-    private Date updateTime;
-    private List<TagDTO> tagDTOList;
+    private SortStatus sortStatus;
 }
