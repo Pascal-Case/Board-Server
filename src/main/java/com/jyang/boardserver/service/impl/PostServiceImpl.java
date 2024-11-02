@@ -37,7 +37,13 @@ public class PostServiceImpl implements PostService {
         postDTO.setCreateTime(new Date());
         postDTO.setUpdateTime(postDTO.getCreateTime());
 
-        postMapper.register(postDTO);
+        try {
+            postMapper.register(postDTO);
+        } catch (RuntimeException e) {
+            log.error("register ERROR! {}", postDTO);
+            throw new RuntimeException("register ERROR! 게시글 등록 메서드를 확인해주세요 " + postDTO);
+        }
+
         Integer postId = postDTO.getId();
         for (int i = 0; i < postDTO.getTagDTOList().size(); i++) {
             TagDTO tagDTO = postDTO.getTagDTOList().get(i);
@@ -50,8 +56,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDTO> getMyPosts(int userId) {
-        System.out.println(userId);
-        return postMapper.getMyPosts(userId);
+        List<PostDTO> postDTOList = null;
+        try {
+            postDTOList = postMapper.getMyPosts(userId);
+        } catch (RuntimeException e) {
+            log.error("getMyPosts ERROR! {}", userId);
+            throw new RuntimeException("getMyPosts ERROR! 게시글 조회 메서드를 확인해주세요 " + userId);
+        }
+
+        return postDTOList;
     }
 
     @Override
@@ -60,7 +73,13 @@ public class PostServiceImpl implements PostService {
             log.error("update ERROR! {}", postDTO);
             throw new RuntimeException("update ERROR! 게시클 수정 메서드를 확인해주세요" + postDTO);
         }
-        postMapper.updatePosts(postDTO);
+
+        try {
+            postMapper.updatePosts(postDTO);
+        } catch (RuntimeException e) {
+            log.error("updatePosts ERROR! {}", postDTO);
+            throw new RuntimeException("updatePosts ERROR! 게시글 수정 메서드를 확인해주세요 " + postDTO);
+        }
     }
 
     @Override
@@ -70,7 +89,13 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("delete ERROR! 게시글 삭제 메서드를 확인해주세요 " + postId);
         }
 
-        postMapper.deletePosts(postId);
+        try {
+            postMapper.deletePosts(postId);
+        } catch (RuntimeException e) {
+            log.error("deletePosts ERROR! {}", postId);
+            throw new RuntimeException("deletePosts ERROR! 게시글 삭제 메서드를 확인해주세요 " + postId);
+
+        }
     }
 
     public void registerComment(CommentDTO commentDTO) {
