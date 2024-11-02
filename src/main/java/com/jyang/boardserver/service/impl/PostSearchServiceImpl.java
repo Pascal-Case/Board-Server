@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +18,9 @@ public class PostSearchServiceImpl implements PostSearchService {
 
     private final PostSearchMapper postSearchMapper;
 
-    @Cacheable(value = "getPosts", key = "'getPosts' + #postSearchRequest.getName() + #postSearchRequest.getCategoryId()")
+    @Cacheable(value = "getPosts", key = "'getPosts' + #postSearchRequest.getName() + #postSearchRequest.getCategoryId()", unless = "#result == null")
     @Override
+    @Async
     public List<PostDTO> getPosts(PostSearchRequest postSearchRequest) {
         List<PostDTO> postDTOList = null;
         try {
